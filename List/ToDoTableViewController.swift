@@ -7,8 +7,11 @@
 
 import UIKit
 
-class ToDoTableViewController: UITableViewController, ToDoCellDelegate {
+class ToDoTableViewController: UITableViewController, ToDoCellDelegate, UISearchBarDelegate {
+
     var toDos = [ToDo]()
+    var filterToDos: [ToDo] = []
+    @IBOutlet var searchBar: UISearchBar!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -19,13 +22,19 @@ class ToDoTableViewController: UITableViewController, ToDoCellDelegate {
             toDos = ToDo.loadSampleToDos()
         }
 
+        filterToDos = toDos
+
         navigationItem.leftBarButtonItem = editButtonItem
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        filterToDos = toDos
     }
 
     // MARK: - Table view data source
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return toDos.count
+        return filterToDos.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -33,7 +42,7 @@ class ToDoTableViewController: UITableViewController, ToDoCellDelegate {
 
         cell.delegate = self
 
-        let toDo = toDos[indexPath.row]
+        let toDo = filterToDos[indexPath.row]
         cell.titleLabel?.text = toDo.title
         cell.isCompleteButton.isSelected = toDo.isComplete
 
@@ -46,7 +55,12 @@ class ToDoTableViewController: UITableViewController, ToDoCellDelegate {
 
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            toDos.remove(at: indexPath.row)
+            let removedToDo = filterToDos.remove(at: indexPath.row)
+            for (i, toDo) in toDos.enumerated() {
+                if toDo.id == removedToDo.id {
+                    toDos.remove(at: i)
+                }
+            }
             tableView.deleteRows(at: [indexPath], with: .automatic)
             ToDo.saveToDos(toDos)
         }
@@ -54,11 +68,34 @@ class ToDoTableViewController: UITableViewController, ToDoCellDelegate {
 
     func checkmarkTapped(sender: ToDoCell) {
         if let indexPath = tableView.indexPath(for: sender) {
-            var toDo = toDos[indexPath.row]
+            var toDo = filterToDos[indexPath.row]
             toDo.isComplete.toggle()
-            toDos[indexPath.row] = toDo
+            filterToDos[indexPath.row] = toDo
+            updateTodos(with: toDo)
             tableView.reloadRows(at: [indexPath], with: .automatic)
             ToDo.saveToDos(toDos)
+        }
+    }
+
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        filterToDos = []
+        if searchText == "" {
+            filterToDos = toDos
+        } else {
+            for toDo in toDos {
+                if toDo.title.uppercased().contains(searchText.uppercased()) {
+                    filterToDos.append(toDo)
+                }
+            }
+        }
+        tableView.reloadData()
+    }
+
+    func updateTodos(with updatedToDo: ToDo) {
+        for (i, toDo) in toDos.enumerated() {
+            if toDo.id == updatedToDo.id {
+                toDos[i] = updatedToDo
+            }
         }
     }
 
@@ -69,12 +106,14 @@ class ToDoTableViewController: UITableViewController, ToDoCellDelegate {
         let sourceViewController = segue.source as! ToDoDetailTableViewController
 
         if let toDo = sourceViewController.toDo {
-            if let indexOfExistingToDo = toDos.firstIndex(of: toDo) {
-                toDos[indexOfExistingToDo] = toDo
+            if let indexOfExistingToDo = filterToDos.firstIndex(of: toDo) {
+                filterToDos[indexOfExistingToDo] = toDo
+                updateTodos(with: toDo)
                 tableView.reloadRows(at: [IndexPath(row: indexOfExistingToDo, section: 0)], with: .automatic)
             } else {
-                let newIndexPath = IndexPath(row: toDos.count, section: 0)
+                let newIndexPath = IndexPath(row: filterToDos.count, section: 0)
                 toDos.append(toDo)
+                filterToDos.append(toDo)
                 tableView.insertRows(at: [newIndexPath], with: .automatic)
             }
         }
@@ -90,8 +129,10 @@ class ToDoTableViewController: UITableViewController, ToDoCellDelegate {
 
         tableView.deselectRow(at: indexPath, animated: true)
 
-        detailController?.toDo = toDos[indexPath.row]
+        detailController?.toDo = filterToDos[indexPath.row]
 
         return detailController
     }
+
+
 }

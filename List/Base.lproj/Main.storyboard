@@ -15,16 +15,24 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <searchBar key="tableHeaderView" contentMode="redraw" id="fEi-pJ-ABk">
+                            <rect key="frame" x="0.0" y="0.0" width="393" height="44"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                            <textInputTraits key="textInputTraits"/>
+                            <connections>
+                                <outlet property="delegate" destination="nRp-a2-Aru" id="R6A-qM-eby"/>
+                            </connections>
+                        </searchBar>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ToDoCellIdentifier" id="d3R-yP-421" customClass="ToDoCell" customModule="List" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="50" width="393" height="51.666667938232422"/>
+                                <rect key="frame" x="0.0" y="94" width="393" height="50.666667938232422"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="d3R-yP-421" id="i2y-ps-XAz">
-                                    <rect key="frame" x="0.0" y="0.0" width="393" height="51.666667938232422"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="393" height="50.666667938232422"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="l1e-E4-4oX">
-                                            <rect key="frame" x="20" y="12.333333333333334" width="28" height="27.333333333333329"/>
+                                            <rect key="frame" x="20" y="11.666666666666666" width="28" height="27.333333333333336"/>
                                             <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                             <state key="normal" image="circle" catalog="system">
                                                 <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="24"/>
@@ -37,7 +45,7 @@
                                             </connections>
                                         </button>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ToDo" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FD6-gX-Jrn">
-                                            <rect key="frame" x="56" y="15.000000000000002" width="317" height="21.666666666666671"/>
+                                            <rect key="frame" x="56" y="15.000000000000002" width="317" height="20.666666666666671"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="317" id="bvc-j6-LGH"/>
                                             </constraints>
@@ -75,6 +83,9 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="searchBar" destination="fEi-pJ-ABk" id="h0v-eZ-Lke"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="V6J-Rj-8Cb" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -209,6 +220,32 @@
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
+                            <tableViewSection id="1UR-5I-i8o">
+                                <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="jeQ-3W-RRt">
+                                        <rect key="frame" x="0.0" y="694.9999942779541" width="393" height="51.666667938232422"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="jeQ-3W-RRt" id="k0K-gi-8eT">
+                                            <rect key="frame" x="0.0" y="0.0" width="393" height="51.666667938232422"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="80m-A4-oqQ">
+                                                    <rect key="frame" x="136.66666666666666" y="5.3333333333333321" width="119.99999999999997" height="41"/>
+                                                    <state key="normal" title="Button"/>
+                                                    <buttonConfiguration key="configuration" style="filled" title="Share To-Do"/>
+                                                    <connections>
+                                                        <action selector="shareButtonTapped:" destination="euu-cP-f4E" eventType="touchUpInside" id="XzD-ww-8rJ"/>
+                                                    </connections>
+                                                </button>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="80m-A4-oqQ" firstAttribute="centerY" secondItem="k0K-gi-8eT" secondAttribute="centerY" id="Fdj-Xh-TVH"/>
+                                                <constraint firstItem="80m-A4-oqQ" firstAttribute="centerX" secondItem="k0K-gi-8eT" secondAttribute="centerX" id="oWb-dI-dIn"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
                         </sections>
                         <connections>
                             <outlet property="dataSource" destination="euu-cP-f4E" id="5eC-8r-IKp"/>
@@ -233,6 +270,7 @@
                         <outlet property="isCompleteButton" destination="b2b-Hc-8AL" id="hl5-74-wJG"/>
                         <outlet property="notesTextView" destination="Dtl-nL-b4r" id="hEZ-cP-3Do"/>
                         <outlet property="saveButton" destination="XJZ-Ai-OT3" id="UXD-Qf-wQ7"/>
+                        <outlet property="shareButton" destination="80m-A4-oqQ" id="ZVr-FK-E26"/>
                         <outlet property="titleTextField" destination="LO6-Xr-k3s" id="IVo-MC-90p"/>
                     </connections>
                 </tableViewController>

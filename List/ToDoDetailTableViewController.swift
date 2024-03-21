@@ -6,14 +6,16 @@
 //
 
 import UIKit
+import MessageUI
 
-class ToDoDetailTableViewController: UITableViewController {
+class ToDoDetailTableViewController: UITableViewController, MFMailComposeViewControllerDelegate {
     @IBOutlet var titleTextField: UITextField!
     @IBOutlet var isCompleteButton: UIButton!
     @IBOutlet var dueDateLabel: UILabel!
     @IBOutlet var dueDateDatePicker: UIDatePicker!
     @IBOutlet var notesTextView: UITextView!
     @IBOutlet var saveButton: UIBarButtonItem!
+    @IBOutlet var shareButton: UIButton!
 
     var isDatePickerHIdden = true
     let dateLabelIndexPath = IndexPath(row: 0, section: 1)
@@ -36,7 +38,7 @@ class ToDoDetailTableViewController: UITableViewController {
         }
         dueDateDatePicker.date = currentDueDate
         updateDueDateLabel(date: dueDateDatePicker.date)
-        updateSaveButtonState()
+        updateSaveAndShareButtonState()
     }
 
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -91,17 +93,39 @@ class ToDoDetailTableViewController: UITableViewController {
         }
     }
 
-    func updateSaveButtonState() {
+    func updateSaveAndShareButtonState() {
         let shouldEnableSaveButton = titleTextField?.text?.isEmpty == false
         saveButton.isEnabled = shouldEnableSaveButton
+
     }
 
     func updateDueDateLabel(date: Date) {
         dueDateLabel.text = date.formatted(.dateTime.month(.defaultDigits).day().year(.twoDigits).hour().minute())
     }
 
+    @IBAction func shareButtonTapped(_ sender: UIButton) {
+        guard MFMailComposeViewController.canSendMail(), let toDo = toDo else {
+            print("Can't send mail")
+            return
+        }
+
+        let mailComposer = MFMailComposeViewController()
+        mailComposer.mailComposeDelegate = self
+
+        mailComposer.setToRecipients(["example@example.com"])
+        mailComposer.setSubject("Reminder \(toDo.title)")
+        mailComposer.setMessageBody("""
+            Hello, this is an email reminder for \(toDo.title).
+            Due: \(toDo.dueDate)
+            Notes: \(toDo.notes ?? "No notes")
+        """, isHTML: false)
+
+        present(mailComposer, animated: true, completion: nil)
+    }
+    
+
     @IBAction func textEditingChanged(_ sender: UITextField) {
-        updateSaveButtonState()
+        updateSaveAndShareButtonState()
     }
 
     @IBAction func returnPressed(_ sender: UITextField) {
