@@ -8,9 +8,9 @@
 import UIKit
 
 class ToDoTableViewController: UITableViewController, ToDoCellDelegate, UISearchBarDelegate {
-
     var toDos = [ToDo]()
     var filterToDos: [ToDo] = []
+    
     @IBOutlet var searchBar: UISearchBar!
 
     override func viewDidLoad() {
@@ -25,10 +25,6 @@ class ToDoTableViewController: UITableViewController, ToDoCellDelegate, UISearch
         filterToDos = toDos
 
         navigationItem.leftBarButtonItem = editButtonItem
-    }
-
-    override func viewWillAppear(_ animated: Bool) {
-        filterToDos = toDos
     }
 
     // MARK: - Table view data source
@@ -133,6 +129,4 @@ class ToDoTableViewController: UITableViewController, ToDoCellDelegate, UISearch
 
         return detailController
     }
-
-
 }
